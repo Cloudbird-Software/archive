@@ -7,6 +7,11 @@
   (c) INDEX.source_commit 处 agent-registry 的源文件 sha256 == content_sha256
       （经 GitHub API contents?ref=source_commit 拉源 blob——保真闭环：
        archive 正本 ↔ 索引声明 ↔ 迁移时源 commit 三方一致）。
+      born-in-archive 例外（ADR-0053 勘误，W2-W5 批次 ADR-0060..0073 起适用）：
+      迁移后新增的 ADR 从未存在于 source_commit——git 历史不可变，源 404 即
+      "迁移后诞生"的判定性证据（反之 mis-recorded source_commit 由 commit
+      可解性前置断言拦截）。此类条目改校验 agent-registry main 上存在同名
+      墓碑（adr-required 按文件名校验依赖的完整性），不参与源 sha 比对。
 
 全部断言通过 exit 0；任一失败 exit 1（fail-closed：拉取失败≠通过）。
 
@@ -36,6 +41,7 @@ import subprocess
 import sys
 import urllib.request
 from pathlib import Path
+from urllib.error import HTTPError
 
 ORG = "Cloudbird-Software"
 REGISTRY = "agent-registry"
@@ -182,10 +188,21 @@ def main() -> int:
         ok(f"(b) adr/ 共 {len(on_disk)} 文件全部已登记（零孤儿）")
 
     # ── (c) 源 commit 处 agent-registry 源文件 sha256 == content_sha256 ──
+    # born-in-archive 例外（ADR-0053 勘误）：源 404 = 迁移后诞生（git 历史不可变，
+    # "曾在"不可能从快照中消失），改校验 agent-registry main 同名墓碑存在——
+    # 墓碑是 adr-required 按文件名校验的依赖面，缺失即编号不可解析。
+    born = 0
+    migrated = 0
     if args.skip_source:
         ok("(c) 跳过（--skip-source，仅本地冒烟）")
     elif args.source_repo:
         repo = Path(args.source_repo)
+        # source_commit 可解性前置断言（防 INDEX 误记把全部条目推向 born 分支）
+        probe = subprocess.run(
+            ["git", "-C", str(repo), "cat-file", "-e", f"{source_commit}^{{commit}}"],
+            capture_output=True)
+        if probe.returncode != 0:
+            err(f"source_commit {source_commit[:12]}… 在本地 agent-registry 克隆中不可解——(c) 失去判据")
         for e in entries:
             f, want = str(e.get("file") or ""), str(e.get("content_sha256") or "")
             if not f:
@@ -195,11 +212,25 @@ def main() -> int:
                 capture_output=True,
             )
             if proc.returncode != 0:
-                err(f"{f}: git show {source_commit[:12]}:decisions/{f} 失败——源 commit 无此文件？")
+                tomb = subprocess.run(
+                    ["git", "-C", str(repo), "show", f"origin/main:decisions/{f}"],
+                    capture_output=True)
+                if tomb.returncode == 0:
+                    born += 1
+                else:
+                    err(f"{f}: 源 commit 与 origin/main 均无 decisions/{f}——born-in-archive 墓碑缺失（编号不可解析）")
             elif sha256_bytes(proc.stdout) != want:
                 err(f"{f}: 源 commit blob sha256 与 INDEX 不符——迁移后源被改动？")
-        ok(f"(c) 源保真闭环（经本地 git，source_commit={source_commit[:12]}…）")
+            else:
+                migrated += 1
+        ok(f"(c) 源保真闭环（经本地 git，source_commit={source_commit[:12]}…；migrated={migrated} born_in_archive={born}）")
     else:
+        # source_commit 可解性前置断言（同上）：不可解 commit 会把全部条目 404 成
+        # "born-in-archive"，须在此 fail-closed 而非静默换轨
+        try:
+            fetch_url(f"{API}/repos/{ORG}/{REGISTRY}/commits/{source_commit}", token)
+        except Exception as ex:  # noqa: BLE001
+            err(f"source_commit {source_commit[:12]}… 不可解（commits API 非 200）: {ex}——(c) 失去判据")
         for e in entries:
             f, want = str(e.get("file") or ""), str(e.get("content_sha256") or "")
             if not f:
@@ -209,12 +240,26 @@ def main() -> int:
             try:
                 blob = json.loads(fetch_url(url, token).decode("utf-8"))
                 src = base64.b64decode(blob.get("content") or "")
+                if sha256_bytes(src) != want:
+                    err(f"{f}: source_commit={source_commit[:12]}… 处源文件 sha256 与 INDEX 不符")
+                else:
+                    migrated += 1
+            except HTTPError as ex:
+                if ex.code == 404:
+                    tomb_url = (f"{API}/repos/{ORG}/{REGISTRY}/contents/decisions/{f}"
+                                f"?ref=main")
+                    try:
+                        fetch_url(tomb_url, token)
+                        born += 1
+                    except Exception as ex2:  # noqa: BLE001
+                        err(f"{f}: 源 404 且 agent-registry main 墓碑缺失（{tomb_url}）: {ex2}——born-in-archive 编号不可解析")
+                else:
+                    err(f"{f}: 源 blob 拉取失败（HTTP {ex.code}，非 404——不适用 born 例外）: {url}——fail-closed")
             except Exception as ex:  # noqa: BLE001
                 err(f"{f}: 源 blob 拉取失败（{url}）: {ex}——fail-closed")
-                continue
-            if sha256_bytes(src) != want:
-                err(f"{f}: source_commit={source_commit[:12]}… 处源文件 sha256 与 INDEX 不符")
-        ok(f"(c) 源保真闭环（经 GitHub API，source_commit={source_commit[:12]}…）")
+        ok(f"(c) 源保真闭环（经 GitHub API，source_commit={source_commit[:12]}…；migrated={migrated} born_in_archive={born}）")
+        if migrated + born != len([e for e in entries if e.get("file")]):
+            err(f"(c) 计数不自洽：migrated({migrated})+born({born}) ≠ 可判条目数——fail-closed")
 
     if errors:
         print(f"\nverify_migration: {len(errors)} 项失败——保真闭环断裂")
