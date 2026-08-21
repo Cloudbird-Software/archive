@@ -1,0 +1,49 @@
+# gate（archive 记忆层仓）—— ADR 归档保真校验（W1-C1 .github#164 / ADR-0053）
+#
+# 为什么：archive/adr/ 的 ADR 正本必须与 agent-registry/decisions/INDEX.yaml 墓碑索引
+# 及迁移时源 commit 三方逐字节一致（append-only 仓的核心不变量）。任何一方漂移
+# （正本被改/索引漏登/孤儿文件）都意味着"记忆层可被无声篡改"——宪法 §1 记忆层
+# 的可信度由本关卡背书。
+#
+# required check 名 = gate（main-protection ruleset，与 agent-registry validate.yml
+# 同款做法：workflow name/job id 即 check 名）。org-gate 由 org required workflows
+# ruleset 中心下发（ADR-0046），不在本文件。
+name: gate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  schedule:
+    # weekly 周一 04:23 UTC（ADR-0053）：错峰——避开 ADR-0011 三治仓 Scorecard
+    # 周扫（05:00/05:30/06:00）与整点 cron 高峰（W1-BRIEF 错峰约定）
+    - cron: "23 4 * * 1"
+  workflow_dispatch: {}
+
+# 顶层最小非空权限（ADR-0021 教训：reusable/脚本需要 contents:read 落盘）
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10   # T-01 gate 预算硬上限（同 .github gate.yml）
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e89458c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      # pyyaml：INDEX.yaml 解析首选（脚本自带零依赖降级解析器，双保险）
+      - run: pip install pyyaml
+      - name: verify migration（三向 sha256 闭环）
+        run: python scripts/verify_migration.py
+        env:
+          # 读公开仓 agent-registry（ADR-0020 全公开后 GITHUB_TOKEN 可读）；
+          # 匿名 raw 也可，带 token 防限流（ADR-0021 先例）
+          GITHUB_TOKEN: ${{ github.token }}
