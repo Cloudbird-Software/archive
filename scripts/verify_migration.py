@@ -181,7 +181,23 @@ def main() -> int:
 
     # ── (b) adr/ 无未登记文件 ──
     on_disk = {p.name for p in adr_dir.iterdir() if p.is_file()}
-    orphans = sorted(on_disk - seen)
+    orphans = on_disk - seen
+    # PR 新增文件豁免：迁移后新增 ADR 的 INDEX 登记与 archive 正本可能跨 PR 落地，
+    # 此时正本 PR 中文件为新增（INDEX 尚未登记）是预期中间态，不视为漂移。
+    # 判定：在 GitHub Actions PR 事件中，以 GitHub API compare base...head 识别新增文件。
+    base_ref = os.environ.get("GITHUB_BASE_REF")
+    head_sha = os.environ.get("GITHUB_SHA")
+    repo_full = os.environ.get("GITHUB_REPOSITORY")
+    if base_ref and head_sha and repo_full and token:
+        try:
+            cmp_url = f"{API}/repos/{repo_full}/compare/{base_ref}...{head_sha}"
+            cmp = json.loads(fetch_url(cmp_url, token).decode("utf-8"))
+            added_names = {Path(f["filename"]).name for f in cmp.get("files", [])
+                           if f.get("status") == "added" and f.get("filename", "").startswith("adr/")}
+            orphans = orphans - added_names
+        except Exception:  # noqa: BLE001——compare 失败不掩盖真实漂移，仅不豁免
+            pass
+    orphans = sorted(orphans)
     if orphans:
         err(f"adr/ 存在 INDEX 未登记文件: {orphans}——半迁移或索引漂移")
     else:
