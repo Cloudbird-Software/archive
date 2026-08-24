@@ -1,0 +1,87 @@
+name: runs-digest
+# PM 运行报告周度聚合（ADR-0085 决策 8）——报告闭环的唯一机械消费件。
+# 周一 04:37 UTC（错峰：避开 ADR-0011 三治仓 Scorecard 05:00/05:30/06:00
+# 与 archive 自身 gate 周扫 04:23）：抽取上周 runs/*.md 的 [followup] 行 +
+# 报告摘要，在 .github 仓开 digest issue（owner 处置面：转卡/转 IR/否决留痕）。
+# 无新报告 → 输出心跳行退出（零 issue 噪音）；开 issue 失败 → run 红（fail-closed，
+# 消费链停摆必须可见，不得静默绿）。
+on:
+  schedule:
+    - cron: "37 4 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runs-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # 拉 gh-app-token.sh（.github 仓治理面，ADR-0044）——digest issue 的跨仓身份
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Cloudbird-Software/.github
+          sparse-checkout: scripts/gh-app-token.sh
+          path: gov
+          persist-credentials: false
+      - name: 计算 ISO 周并抽取报告
+        run: |
+          set -euo pipefail
+          # ISO 周一口径：上周 = 当前周 -1（digest 覆盖已完整结束的一周）
+          LAST_WEEK=$(python3 - <<'EOF'
+          import datetime
+          t = datetime.date.today() - datetime.timedelta(weeks=1)
+          y, w, _ = t.isocalendar()
+          print(f"{y}-W{w:02d}")
+          EOF
+          )
+          echo "WEEK=$LAST_WEEK" >> "$GITHUB_ENV"
+          FILE="runs/${LAST_WEEK}.md"
+          if [[ ! -f "$FILE" ]]; then
+            echo "上周无运行报告（${FILE} 不存在）——心跳行退出"
+            echo "HEARTBEAT=1" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          echo "HEARTBEAT=0" >> "$GITHUB_ENV"
+          # [followup] 行抽取（唯一机械抓手；行内格式见 runs/README.md）
+          grep -nE '^\[followup\] ' "$FILE" > followups.txt || touch followups.txt
+          # 报告节头（--- 分隔的 run 元信息行）摘要
+          grep -nE '^### ' "$FILE" > runs_head.txt || touch runs_head.txt
+          echo "runs=$(wc -l < runs_head.txt) followups=$(wc -l < followups.txt)"
+      - name: 开 digest issue（.github 仓，App 令牌——ADR-0084 前例同款零新增 secret）
+        if: env.HEARTBEAT == '0'
+        env:
+          CB_APP_ID: ${{ secrets.CB_APP_ID }}
+          AGENT_APP_SECRET: ${{ secrets.AGENT_APP_SECRET }}
+        run: |
+          set -euo pipefail
+          # 铸 cloudbrid-agent 单仓令牌（AG-2）：目标=.github（开 digest issue）
+          TOKEN=$(REPO=".github" CB_APP_ID="$CB_APP_ID" AGENT_APP_SECRET="$AGENT_APP_SECRET" \
+                  bash gov/scripts/gh-app-token.sh)
+          {
+            echo "## PM 周报 digest ${WEEK}（ADR-0085 决策 8，自动聚合）"
+            echo
+            echo "### 报告索引"
+            cat runs_head.txt | sed 's/^/- /' || true
+            echo
+            echo "### 改进点提案（[followup] 全量——处置：转卡 / 转 IR / 否决关掉留痕）"
+            echo
+            cat followups.txt | sed 's/^[0-9]*:/- /' || echo "（本周无 followup）"
+            echo
+            echo "---"
+            echo "来源：archive/runs/${WEEK}.md（append-only；报告是经验输入不是验收证据）"
+          } > body.md
+          GH_TOKEN="$TOKEN" gh issue create -R Cloudbird-Software/.github \
+            -t "PM 周报 digest ${WEEK}" -b "$(cat body.md)" -l "pm-digest" \
+            || { echo "::error::digest issue 创建失败——消费链停摆，fail-closed"; exit 1; }
+      - name: 心跳（无报告）
+        if: env.HEARTBEAT == '1'
+        run: echo "AUDIT | runs-digest | week=${WEEK} | heartbeat（上周无报告，零派单）"

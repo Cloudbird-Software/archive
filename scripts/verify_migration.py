@@ -180,7 +180,9 @@ def main() -> int:
     ok(f"(a) INDEX entries={len(entries)} 逐一校验 archive_path 存在性+sha256（失败项见上）")
 
     # ── (b) adr/ 无未登记文件 ──
-    on_disk = {p.name for p in adr_dir.iterdir() if p.is_file()}
+    # INDEX.yaml 自 v2 起随正本同居 adr/（家园单仓化，ADR-0085）——它是索引不是正本，
+    # 不入孤儿判定
+    on_disk = {p.name for p in adr_dir.iterdir() if p.is_file()} - {"INDEX.yaml"}
     orphans = on_disk - seen
     # PR 新增文件豁免：迁移后新增 ADR 的 INDEX 登记与 archive 正本可能跨 PR 落地，
     # 此时正本 PR 中文件为新增（INDEX 尚未登记）是预期中间态，不视为漂移。
@@ -211,6 +213,11 @@ def main() -> int:
     migrated = 0
     if args.skip_source:
         ok("(c) 跳过（--skip-source，仅本地冒烟）")
+    elif index.get("source_closed"):
+        # 家园单仓化（ADR-0085）：INDEX v2 起随正本落 archive/adr/，agent-registry
+        # 已 GitHub 归档——迁移 cohort（ADR-0001..0084）的源保真由历史周期校验
+        # 背书，(c) 对新世界条目无判据，按索引声明收口
+        ok("(c) 源保真闭环收口（INDEX.source_closed=true，ADR-0085 家园单仓化）")
     elif args.source_repo:
         repo = Path(args.source_repo)
         # source_commit 可解性前置断言（防 INDEX 误记把全部条目推向 born 分支）

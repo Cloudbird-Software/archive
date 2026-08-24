@@ -41,9 +41,9 @@ jobs:
           python-version: "3.12"
       # pyyaml：INDEX.yaml 解析首选（脚本自带零依赖降级解析器，双保险）
       - run: pip install pyyaml
-      - name: verify migration（三向 sha256 闭环）
-        run: python scripts/verify_migration.py
+      # 家园单仓化（ADR-0085）：INDEX v2 随正本落 adr/INDEX.yaml，本仓自洽校验
+      # （(a) 索引↔正本 sha256、(b) 零孤儿；(c) 源保真按 source_closed 收口）
+      - name: verify migration（索引↔正本 sha256 闭环）
+        run: python scripts/verify_migration.py --index-file adr/INDEX.yaml
         env:
-          # 读公开仓 agent-registry（ADR-0020 全公开后 GITHUB_TOKEN 可读）；
-          # 匿名 raw 也可，带 token 防限流（ADR-0021 先例）
           GITHUB_TOKEN: ${{ github.token }}
