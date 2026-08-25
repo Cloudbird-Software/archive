@@ -628,3 +628,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0089-20260825-morning-pushes-backfill.md
     content_sha256: a147065bcbb0ffea7428f6c6559b7639a80ea79e30541a9d2c00920d2dd83713
+  - number: 90
+    title: "全 ruleset 统一 org admin bypass 基线——org-required-workflows 补齐与漂移监控不变量"
+    file: ADR-0090-org-admin-bypass-all-rulesets.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0090-org-admin-bypass-all-rulesets.md
+    content_sha256: cb5882b2f3ab49c3a4d5a47bdca4867637998cd0c8c87d3bd68f1d18ffbd6332
