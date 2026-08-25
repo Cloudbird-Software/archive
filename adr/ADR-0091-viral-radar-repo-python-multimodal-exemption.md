@@ -89,8 +89,10 @@ Python 生态——ASR 层 faster-whisper（MIT，CTranslate2 推理，原生 se
      参照。按 ADR-0039 白名单语义，其许可 deny-by-default：若未来确需直接依赖，
      仅可经 ADR-0026 PURL 精确豁免通道（allow-dependencies-licenses）逐版本
      豁免并须独立 ADR 论证，"owner 批准"本身不构成放行判据。
-   - **wx_channel**（MIT，Go 实现）：视频号采集参考，同 MediaCrawler"参考不
-     依赖"裁决（许可虽在白名单，但采集通道本仓自研的决策不变）。
+   - **wx_channel**（MIT，Go 实现，nobiyou/wx_channel）：视频号采集参考，同
+     MediaCrawler"参考不依赖"裁决（许可虽在白名单，但采集通道本仓自研的决策
+     不变）。维护状态注记（2026-08 调研）：上游活跃但版本节奏放缓（最新
+     v5.6.x，2026-06），视频号接口变动频繁，参考价值以登录态/流解析思路为主。
    风险与缓解：采集层反爬对抗是持续成本（IR Action Item 明示"自研 vs 采购
    第三方数据 API"待评估）——本 ADR 仅锁"参考不依赖"姿态，采购/自研裁决留给
    后续 spec 阶段红队审查。
