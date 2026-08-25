@@ -649,3 +649,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0092-20260825-govtoken-blind-window-pushes-backfill.md
     content_sha256: 8aaa04cc3c8a6af9aaeda4652c81f92ef74177245561e8d2acde7d8d73660fe7
+  - number: 93
+    title: "Media-Monitor 建仓 bootstrap 直推 (b) 类豁免追认与幽灵引用消除"
+    file: ADR-0093-media-monitor-bootstrap-class-b-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0093-media-monitor-bootstrap-class-b-backfill.md
+    content_sha256: f73e5b90ce84835cce9aeec2714bd3131a63d776c56fda345e99498a57f9677a
