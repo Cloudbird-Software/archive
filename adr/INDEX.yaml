@@ -607,3 +607,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0086-cnb-token-decision.md
     content_sha256: 389cd3bf3f94f3b6d10dc5e72141a648f803a4466dc7aaff44abfe10cedc6cbb
+  - number: 87
+    title: "X-04 条款正式触发状态变更——rejected → triggered"
+    file: ADR-0087-x04-formal-trigger-activation.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0087-x04-formal-trigger-activation.md
+    content_sha256: 04b2daea97e6c72c84029ed8b616495f2f3a54343409b2f4f8f72f64a9488efd
