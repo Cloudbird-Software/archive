@@ -614,3 +614,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0087-x04-formal-trigger-activation.md
     content_sha256: 04b2daea97e6c72c84029ed8b616495f2f3a54343409b2f4f8f72f64a9488efd
+  - number: 88
+    title: "CI-Workflows 破玻璃直推回填——adversary 判定模型紧急切换与误置配置清理"
+    file: ADR-0088-ciw-adversary-model-switch-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0088-ciw-adversary-model-switch-backfill.md
+    content_sha256: 54c3a282c3d19bc2db26b59635489fb1b85333875dab7ebcd1526fa36b9af378
