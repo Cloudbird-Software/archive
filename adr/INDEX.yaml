@@ -635,3 +635,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0090-org-admin-bypass-all-rulesets.md
     content_sha256: cb5882b2f3ab49c3a4d5a47bdca4867637998cd0c8c87d3bd68f1d18ffbd6332
+  - number: 91
+    title: "Viral_Radar 建仓申报与 Python 多模态复用豁免——全网爆款对标分析系统"
+    file: ADR-0091-viral-radar-repo-python-multimodal-exemption.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0091-viral-radar-repo-python-multimodal-exemption.md
+    content_sha256: 288cb40b49beee528f09929dc8bb0d5a8d2f90dfa4f10591b220ddd49d0afba4
