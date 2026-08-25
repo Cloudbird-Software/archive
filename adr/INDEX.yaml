@@ -600,3 +600,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0085-pm-first-paradigm-shift.md
     content_sha256: c9dafdb753247ad80d2dd2f4f5df3cabd9beeed91dd0fc0ffce62afc146a9afe
+  - number: 86
+    title: "CNB 平台 token 高权限决策——保持+三层缓解"
+    file: ADR-0086-cnb-token-decision.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0086-cnb-token-decision.md
+    content_sha256: 389cd3bf3f94f3b6d10dc5e72141a648f803a4466dc7aaff44abfe10cedc6cbb
