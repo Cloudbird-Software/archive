@@ -642,3 +642,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0091-viral-radar-repo-python-multimodal-exemption.md
     content_sha256: 225480db8be4a53a3be8b5983a2eee057fc6089eb9945a33a8a82d734bc7ad74
+  - number: 92
+    title: "2026-08-25 GOVERNANCE_TOKEN 失明窗口直推批次回填"
+    file: ADR-0092-20260825-govtoken-blind-window-pushes-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0092-20260825-govtoken-blind-window-pushes-backfill.md
+    content_sha256: 8aaa04cc3c8a6af9aaeda4652c81f92ef74177245561e8d2acde7d8d73660fe7
