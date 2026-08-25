@@ -641,4 +641,4 @@ entries:
     lifecycle: active
     decision_status: accepted
     archive_path: adr/ADR-0091-viral-radar-repo-python-multimodal-exemption.md
-    content_sha256: 288cb40b49beee528f09929dc8bb0d5a8d2f90dfa4f10591b220ddd49d0afba4
+    content_sha256: 894dfc5943e31b780c843e4795785255f7a1ca1c70b4eb701d59641470e3130c

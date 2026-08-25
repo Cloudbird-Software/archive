@@ -7,7 +7,9 @@
   GOVERNANCE flows.new_repo；ADR-0020（组织全仓公开政策）；ADR-0023（AI_Web_School
   语言准入豁免先例）；ADR-0084（QW_Arena1 语言豁免先例——本 ADR 区别：多模态生态
   复用而非外部比赛契约）；ADR-0090（org admin bypass 基线——本仓 bootstrap 路径
-  依其决策 4 简化）；ADR-0002（LLM Gateway 常驻服务模式——本仓 LLM 网关层沿用）
+  依其决策 4 简化）；ADR-0002（LLM Gateway 常驻服务模式——本仓 LLM 网关层沿用）；
+  ADR-0039（依赖供应链白名单——决策 5 许可判定的现行模型）；ADR-0026（PURL 精确
+  豁免通道——非白名单许可的唯一例外路径）
 
 ## 背景
 
@@ -23,13 +25,14 @@ ci.yml/hygiene/quality 脚手架），new-repo-init.sh 四步基线（squash-onl
 按 flows.new_repo，语言选型依据与政策豁免须本 ADR 登记；REPOS.yaml 申报入图
 （GM-4）随后以独立 PR 落地（.github 仓）。
 
-开源能力调研（选型依据，广泛搜索结论）：目标域的核心可复用资产全部沉淀在
-Python 生态——采集层 MediaCrawler（抖音/小红书/快手/B站/微博，CDP 模式）与
-wx_channel（视频号）；ASR 层 faster-whisper（MIT，CTranslate2 推理，原生
-segment 级时间戳）；OCR 层 RapidOCR（Apache-2.0，ONNX 离线推理）/PaddleOCR
+开源能力调研（选型依据，广泛搜索结论）：目标域的核心可复用资产主要沉淀在
+Python 生态——ASR 层 faster-whisper（MIT，CTranslate2 推理，原生 segment 级
+时间戳）；OCR 层 RapidOCR（Apache-2.0，ONNX 离线推理）/PaddleOCR
 （Apache-2.0）；LLM 网关层 LiteLLM（MIT，OpenAI 格式统一 100+ provider，含
-成本追踪/降级/fallback）。Go/TS 生态在该域无同等成熟度组合（多模态推理链
-Python 一等公民）。
+成本追踪/降级/fallback）。采集层参考资产生态混布：MediaCrawler（Python，
+抖音/小红书/快手/B站/微博，CDP 模式）与 wx_channel（**Go** 实现，MIT，视频号
+下载）——采集通道本仓自研（见决策 5"参考不依赖"），不构成语言选型输入；
+语言选型由 ASR/OCR/LLM 网关三层推理生态钉死（Go/TS 在该域无同等成熟度组合）。
 
 组织现行语言政策（languages.yaml application 层）默认 go，python 仅限
 "agent-runtime integration only"（ADR-0025），且 ADR-0085 后新仓 Python 准入
@@ -68,21 +71,26 @@ Python 一等公民）。
    见决策 5 的许可面约束）、suppression-budget/quality-gates——治理基线不变，
    仅语言规范面豁免。
 5. **开源选型登记与许可裁决**（dependency_policy proposal 格式：
-   name/purpose/license/stdlib_alternative）：
+   name/purpose/license/stdlib_alternative；许可判定按 ADR-0039 白名单模型
+   ——deny-by-default，不在 allow-licenses 即红）：
    - **faster-whisper**（MIT）：ASR 引擎，segment 级时间戳原生输出，满足 IR-3.1
      强制要求。stdlib_alternative：无（自训 ASR 不可行）。
    - **RapidOCR**（Apache-2.0）：OCR 引擎，ONNX 离线推理，中英识别满足 IR-3.2。
+     注：仓库代码 Apache-2.0，但其所用 PP-OCR 模型权重版权归 Baidu（模型与
+     工程代码版权分离——上游文档明示），商用合规面在首个依赖引入 PR 复核。
      stdlib_alternative：无。
    - **LiteLLM**（MIT，open core）：LLM 网关层，满足 NFR-3 大模型抽象层
      （本地/第三方热切换）。stdlib_alternative：无（自研网关成本远超复用）。
    - **yt-dlp**（Unlicense）：通用媒体流下载内核（仅其提取器框架作为参考实现，
      不直接用于三目标平台）。stdlib_alternative：无。
-   - **MediaCrawler**（自定义非商用学习许可）：抖音/小红书采集能力参考。裁决：
-     **不 vendored、不分发、不直接依赖其代码**——本仓以适配器模式自研采集通道，
-     MediaCrawler 仅作协议/登录态处理的技术参照；商用清障前不得引入其代码。
-     若未来确需直接复用，须 owner 另行批准（其许可不在 forbidden_licenses 列表
-     但属 custom license，按 dependency_policy 逐案审批）。
-   - **wx_channel**（开源，分支维护滞后）：视频号采集参考，同 MediaCrawler 裁决。
+   - **MediaCrawler**（自定义非商用学习许可——不在 ADR-0039 白名单）：
+     抖音/小红书采集能力参考。裁决：**不 vendored、不分发、不直接依赖其代码**
+     ——本仓以适配器模式自研采集通道，MediaCrawler 仅作协议/登录态处理的技术
+     参照。按 ADR-0039 白名单语义，其许可 deny-by-default：若未来确需直接依赖，
+     仅可经 ADR-0026 PURL 精确豁免通道（allow-dependencies-licenses）逐版本
+     豁免并须独立 ADR 论证，"owner 批准"本身不构成放行判据。
+   - **wx_channel**（MIT，Go 实现）：视频号采集参考，同 MediaCrawler"参考不
+     依赖"裁决（许可虽在白名单，但采集通道本仓自研的决策不变）。
    风险与缓解：采集层反爬对抗是持续成本（IR Action Item 明示"自研 vs 采购
    第三方数据 API"待评估）——本 ADR 仅锁"参考不依赖"姿态，采购/自研裁决留给
    后续 spec 阶段红队审查。
@@ -107,10 +115,12 @@ Python 一等公民）。
 ## 验证
 
 - Viral_Radar 仓线上存在且 public；template 基线 72 文件与 template-service
-  逐文件一致（generate endpoint 官方实例化，sha 可比对账）
+  逐文件 sha 一致（generate endpoint 官方实例化，git trees recursive=1 对账
+  已复核）
 - new-repo-init.sh 基线验证记录：squash-only/合并删分支/auto-merge/wiki+projects
   关 + 治理标签全套（type:*/state:*）已同步
 - IR（Viral_Radar#1）九字段与原始需求文档逐节可对照——spec 红队审查锚点成立
-- REPOS.yaml 申报条目落地（.github 仓 PR，引用本 ADR——GM-4）
+- REPOS.yaml 申报条目：本 ADR 合并后以独立 PR 落地（.github 仓，引用本
+  ADR——GM-4；本 ADR 不宣称其已完成）
 - 本 ADR 双落盘：archive/adr/ 正本 + INDEX.yaml 登记（born-in-archive，
   source_closed 后无墓碑义务）
