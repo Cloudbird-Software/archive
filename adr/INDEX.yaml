@@ -613,7 +613,7 @@ entries:
     lifecycle: active
     decision_status: accepted
     archive_path: adr/ADR-0087-x04-formal-trigger-activation.md
-    content_sha256: 04b2daea97e6c72c84029ed8b616495f2f3a54343409b2f4f8f72f64a9488efd
+    content_sha256: cb4431cffabcb69bf902624b37eaa4ac4e41d4a5234fc66a7435e7264e2d7440
   - number: 88
     title: "CI-Workflows 破玻璃直推回填——adversary 判定模型紧急切换与误置配置清理"
     file: ADR-0088-ciw-adversary-model-switch-backfill.md
@@ -621,3 +621,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0088-ciw-adversary-model-switch-backfill.md
     content_sha256: 54c3a282c3d19bc2db26b59635489fb1b85333875dab7ebcd1526fa36b9af378
+  - number: 89
+    title: "2026-08-25 晨间直推批次回填——archive INDEX 补登记与 QW_Arena1 比赛内容落盘"
+    file: ADR-0089-20260825-morning-pushes-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0089-20260825-morning-pushes-backfill.md
+    content_sha256: a147065bcbb0ffea7428f6c6559b7639a80ea79e30541a9d2c00920d2dd83713

@@ -1,9 +1,10 @@
 # ADR-0087: X-04 formal_tla 条款从 rejected 激活为 triggered
 
-## 状态
-accepted
+- status: accepted
+- date: 2026-08-24
+- deciders: PM 会话（owner 全量授权）
 
-## 上下文
+## 背景
 - testing.yaml X-04 (formal_tla) 处于 `rejected` 状态，理由“无调度器/共识组件”（revisit_when: “写分布式协调组件”）
 - IR-0004 AC-7 交付了 `pipeline/testing/formal/trigger.py` + `checklist.yaml`：risk_level 缺失时 fail-closed 的条件触发器
 - 触发器不需要 TLA+调度器运行时——它读 YAML checklist 对 spec 文本做机械判定（纯 I/O，无外部依赖）
