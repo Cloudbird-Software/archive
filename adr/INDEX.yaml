@@ -656,3 +656,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0093-media-monitor-bootstrap-class-b-backfill.md
     content_sha256: f73e5b90ce84835cce9aeec2714bd3131a63d776c56fda345e99498a57f9677a
+  - number: 94
+    title: ".github 仓 trae 会话终止备份直推回填"
+    file: ADR-0094-dotgithub-trae-backup-push-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0094-dotgithub-trae-backup-push-backfill.md
+    content_sha256: cd93f699be6145d531ce5862d3c3d07e842c4f1df021834a2efc1c208b92d8e1
