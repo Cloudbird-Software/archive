@@ -684,3 +684,24 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0097-conductor-event-surface-product-repos.md
     content_sha256: 6f88e16188949d932554e074abdcd0ec4812d1652b2eeec73e7046768735cd60
+  - number: 98
+    title: "Media-Monitor license 门禁全量拆除（IR-MM-0001 AC-1 治理背书）"
+    file: ADR-0098-media-monitor-license-gate-full-removal.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0098-media-monitor-license-gate-full-removal.md
+    content_sha256: d69e766be185c1c9af32dd9c1c71c9616e449ecc5606380117e838063c418a9e
+  - number: 99
+    title: "上游生态 submodule 实体化（Media-Monitor upstream 双轨·轨道 A）"
+    file: ADR-0099-media-monitor-upstream-submodule-materialization.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0099-media-monitor-upstream-submodule-materialization.md
+    content_sha256: 0ec896ecd4579c80cb1ce01ac3bf475554dfe1adfc54e4dc6963c5a8fe28e183
+  - number: 100
+    title: "vision 层解冻接 UI-TARS（Media-Monitor upstream 双轨·轨道 B）"
+    file: ADR-0100-media-monitor-vision-unfreeze-ui-tars.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0100-media-monitor-vision-unfreeze-ui-tars.md
+    content_sha256: 72af81865a5367b4ad7eb46d321c733dd4e1619b9c97b931b427369debd6709b
