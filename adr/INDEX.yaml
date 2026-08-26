@@ -663,3 +663,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0094-dotgithub-trae-backup-push-backfill.md
     content_sha256: cd93f699be6145d531ce5862d3c3d07e842c4f1df021834a2efc1c208b92d8e1
+  - number: 95
+    title: "AGENTS.md 按角色路由重构 + IR 挂靠产品仓"
+    file: ADR-0095-agent-role-routing-and-ir-on-product-repos.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0095-agent-role-routing-and-ir-on-product-repos.md
+    content_sha256: b67fe46d70632df4162ec3cd3434a2bb50207198b37f1707ebfb83d0f0065539
