@@ -670,3 +670,17 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0095-agent-role-routing-and-ir-on-product-repos.md
     content_sha256: b67fe46d70632df4162ec3cd3434a2bb50207198b37f1707ebfb83d0f0065539
+  - number: 96
+    title: "agent-registry 私有仓计费止血删除重建回填"
+    file: ADR-0096-agent-registry-private-billing-recreate-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0096-agent-registry-private-billing-recreate-backfill.md
+    content_sha256: 024d3e3f3bcd8df123debf3d288924b3d7c17a91b310edd2260c3d58b774cc8e
+  - number: 97
+    title: "conductor 事件面扩展至产品仓——IR 挂靠自动化收口"
+    file: ADR-0097-conductor-event-surface-product-repos.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0097-conductor-event-surface-product-repos.md
+    content_sha256: 6f88e16188949d932554e074abdcd0ec4812d1652b2eeec73e7046768735cd60
