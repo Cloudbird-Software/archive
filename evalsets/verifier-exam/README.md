@@ -48,9 +48,9 @@
 - 存档载体 = CI-Workflows `verifier-exam` workflow 的 JSONL artifact
   （`verifier-exam-results`，retention 90 天）；每行一条考试记录，含全部分项
   得分/阈值/整体判定/锁定配置（模型别名+prompt 版本+采样参数）/考试集 freeze_hash。
-- 执照挂接：agent-registry `registry/verifiers/`（schema
-  `registry/schemas/verifier-license.json`）条目必须引用 archive_key，注册校验脚本
-  `agent-registry/scripts/verifier-license.py` 对照成绩存档核验（回放模式成绩不可注册）。
+- 执照挂接：随 ADR-0085 退役（agent-registry 归档，verifier-license.py 停维）——
+  历史机制快照见 `retired/agent-registry/`；当前考试成绩仅作 shadow 观察与
+  校准数据源，不构成持证判定。
 
 ## 版本史
 

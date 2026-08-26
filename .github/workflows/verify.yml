@@ -1,12 +1,12 @@
 # gate（archive 记忆层仓）—— ADR 归档保真校验（W1-C1 .github#164 / ADR-0053）
 #
-# 为什么：archive/adr/ 的 ADR 正本必须与 agent-registry/decisions/INDEX.yaml 墓碑索引
-# 及迁移时源 commit 三方逐字节一致（append-only 仓的核心不变量）。任何一方漂移
-# （正本被改/索引漏登/孤儿文件）都意味着"记忆层可被无声篡改"——宪法 §1 记忆层
-# 的可信度由本关卡背书。
+# 为什么：adr/INDEX.yaml（索引随正本同居，ADR-0085 家园单仓化）与正本双向
+# sha256 闭环 + 正本与迁移时源 commit 字节一致（append-only 仓的核心不变量）。
+# 任何一方漂移（正本被改/索引漏登/孤儿文件）都意味着"记忆层可被无声篡改"——
+# 宪法 §1 记忆层的可信度由本关卡背书。
 #
-# required check 名 = gate（main-protection ruleset，与 agent-registry validate.yml
-# 同款做法：workflow name/job id 即 check 名）。org-gate 由 org required workflows
+# required check 名 = gate（main-protection ruleset；workflow name/job id 即
+# check 名——历史参照 agent-registry validate.yml 同款做法，仓已随 ADR-0085 归档）。org-gate 由 org required workflows
 # ruleset 中心下发（ADR-0046），不在本文件。
 name: gate
 on:

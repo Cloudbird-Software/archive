@@ -1,6 +1,6 @@
 # archive —— 记忆层（宪法 §1）
 
-> 层：L1 记忆层 ｜ org: `Cloudbird-Software` ｜ 建仓：W1-C1（.github#164，ADR-0053） ｜ 状态真源：`agent-registry/decisions/INDEX.yaml`
+> 层：L1 记忆层 ｜ org: `Cloudbird-Software` ｜ 建仓：W1-C1（.github#164，ADR-0053） ｜ 状态真源：本仓 `adr/INDEX.yaml`（ADR-0085 家园单仓化）
 
 ## 角色
 
@@ -33,8 +33,7 @@ scripts/verify_migration.py  # 迁移保真校验（INDEX ↔ adr/ ↔ 源 commi
 .github/workflows/verify.yml # PR + push + weekly 跑 verify_migration.py
 ```
 
-**ADR 状态不写在本仓文件里**（保持字节一致）；每个 ADR 的
-`lifecycle: active|superseded|archived` 与 `decision_status: accepted|proposed`
-唯一真源 = `agent-registry/decisions/INDEX.yaml`（墓碑索引，ADR-0053）。
-新 ADR 的落位流程见 ADR-0053 决策 3：正本入本仓 `adr/` + agent-registry 落墓碑
-+ INDEX.yaml 登记 entry。
+每个 ADR 的 `lifecycle: active|superseded|archived` 与 `decision_status:
+accepted|proposed` 唯一真源 = 本仓 `adr/INDEX.yaml`（索引随正本同居，ADR-0085
+家园单仓化——agent-registry/decisions/ 的旧索引已随仓归档冻结）。
+新 ADR 的落位流程：正本入本仓 `adr/` + 同目录 `INDEX.yaml` 登记 entry。
