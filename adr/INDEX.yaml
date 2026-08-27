@@ -705,3 +705,17 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0100-media-monitor-vision-unfreeze-ui-tars.md
     content_sha256: 72af81865a5367b4ad7eb46d321c733dd4e1619b9c97b931b427369debd6709b
+  - number: 101
+    title: "Media-Monitor 小红书视频流下载契约与引擎签名头通道（IR-MM-0002 X2/X3）"
+    file: ADR-0101-media-monitor-xhs-video-download-contract-and-header-signatures.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0101-media-monitor-xhs-video-download-contract-and-header-signatures.md
+    content_sha256: 0250b25597600b13adf08b42ec21ef6514f7bb40a58535f9c3493dc813caa2f1
+  - number: 102
+    title: "Media-Monitor 视频号 netcapture+解密专属通道与 upstream 实体化扩展（IR-MM-0002 S1/S2/S3）"
+    file: ADR-0102-media-monitor-shipinhao-netcapture-decrypt-channel.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0102-media-monitor-shipinhao-netcapture-decrypt-channel.md
+    content_sha256: 09c0031111d7e63973b47fef5a89c0e3592740b00776babb7a395db75146a271
