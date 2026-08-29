@@ -51,3 +51,10 @@ jobs:
       # 链断/篡改/字段缺失=红（INV-01 判定锚点机械 + INV-03 append-only）
       - name: verify decisions（决策语料链完整性）
         run: python scripts/verify_decisions.py --ledger decisions/ledger.jsonl
+      # 证据账本·判定层（IR-0006 W1-B1 / ADR-0103）：独立复算链+checkpoint——
+      # 4KB 复检/断链/tenant 缺失/checkpoint 不符=红（fail-closed）
+      - name: verify evidence（判定层链完整性 + checkpoint 对账）
+        run: python scripts/verify_evidence.py --ledger evidence/ledger.jsonl
+      # 写入执法负向实测（卡 #406 AC-3a/3b/3c：超限拒写/断链红/tenant 拒写）
+      - name: test evidence（写入器执法 + 复算兜底）
+        run: python scripts/test_evidence.py
