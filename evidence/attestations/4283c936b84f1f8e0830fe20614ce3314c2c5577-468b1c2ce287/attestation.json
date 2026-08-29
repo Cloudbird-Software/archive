@@ -1,0 +1,24 @@
+{
+ "_type": "attest-pack/v0",
+ "subject": {
+  "name": "artifact.tar.gz",
+  "digest": {
+   "sha256": "468b1c2ce2878d54ac1d701ec7db153022fbf0744c3e6ec92c589d33f655cbcf"
+  }
+ },
+ "materials": {
+  "sbom_sha256": "523da923abfae39ff2ba945f693b83ca73afa7e57b2eb039677be9e37b30dcca",
+  "repo": "Cloudbird-Software/.github",
+  "git_commit": "4283c936b84f1f8e0830fe20614ce3314c2c5577"
+ },
+ "predicate": {
+  "card": "Cloudbird-Software/.github#420",
+  "tenant": "cloudbird-internal",
+  "tool": "attest_pack.py",
+  "generated_at": "2026-08-29T15:46:13Z"
+ },
+ "signature": {
+  "alg": "RS256",
+  "sig": "qjEry5lU8P2pPghMLR8Sq/DXWYyaRh0GbVt/I4XtOJqKQyHAuS1922RO6ePGMKD1APYtbqtYO5ayEY0XJ0sxAhXn85U7D0ULV6g2lnjhlI37RhLOcuXVfgPvO+rQ4qxbLivb64jD9BjdlLEJG/jJ9pzCymaJtitYMerocI2HT5i47edXky8L/Sa0IzQDd8aiLuTkYjHOb31s/Fg/E4Z/OFTxsWmidvX8txqa7Yf/BYvYdcyAhYN/OH5KoE4mmcqykO3MmXhjZazHlEM/AeU6fpoNnScb6tJ2/VCDJ6C1BmmoPE/rQCHvQ3i8nfi7lxXTjhDedqxDg0+hiNivbs+SbQ=="
+ }
+}
