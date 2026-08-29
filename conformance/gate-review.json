@@ -1,0 +1,56 @@
+{
+ "schema": "gate-metagovernance-review/v1",
+ "generated_at": "2026-08-29T17:17:04Z",
+ "four_columns": [
+  "gate",
+  "judge",
+  "data_source",
+  "red_line"
+ ],
+ "gates": [
+  {
+   "gate": "gate:gate",
+   "judge": "mechanical",
+   "data_source": "governance/tests/*（make gates-pr 治理自测发现面）",
+   "red_line": "负向断言族在位（test-attest-bind 三负向/test-eval-gate 边界红/test-metagov 断链红）"
+  },
+  {
+   "gate": "eval-wave:eval-wave",
+   "judge": "mechanical",
+   "data_source": "governance/eval-gate.py + policy/eval-gates.yaml（δ/ratio/污染阈值，INV-01）",
+   "red_line": "run 33263613945（ts 缺字段被账本链验拦截红——fail-closed 生效活体）"
+  },
+  {
+   "gate": "env-drift:drift",
+   "judge": "mechanical",
+   "data_source": "governance/env-drift.py + policy/env-drift.yaml（scope 检测面）",
+   "red_line": "run 33257903305（dev-self ingress 漂移→exit 1→issue #453 自动开）"
+  },
+  {
+   "gate": "attest-drill:drill",
+   "judge": "mechanical",
+   "data_source": "governance/attest-trace.sh（payload↔attestation 双锚+git archive 重建）",
+   "red_line": "run 33261139414（RUN_ID unbound 红——绑定步绿/回溯步红分层，无默认绿）"
+  },
+  {
+   "gate": "feishu-drill:drill",
+   "judge": "mechanical",
+   "data_source": "governance/feishu-sync.py（INV-05 label 唯一真源+漂移纠正）",
+   "red_line": "run 33254361404（人工违规改表被下轮投影纠正+drift 告警入账本）"
+  },
+  {
+   "gate": "governance-drift:drift-check",
+   "judge": "mechanical",
+   "data_source": "governance/GOVERNANCE.yaml + expected-state.json（期望态对账）",
+   "red_line": "GM-1 模式三消费者实证（governance/env/镜像 tag 后续）"
+  },
+  {
+   "gate": "post-merge-verify:smoke",
+   "judge": "pending",
+   "data_source": "post-merge-verify.yml（合并后冒烟——样本待首红，通道在位）",
+   "red_line": "pending（fail-closed 通道在位：smoke 红→revert；首红样本尚未发生，不造数）"
+  }
+ ],
+ "workflow_jobs_total": 38,
+ "declared_total": 7
+}
