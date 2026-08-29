@@ -719,3 +719,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0102-media-monitor-shipinhao-netcapture-decrypt-channel.md
     content_sha256: 09c0031111d7e63973b47fef5a89c0e3592740b00776babb7a395db75146a271
+  - number: 103
+    title: "治理总纲吸收——裁决模型调和（risk_class=参数包）与声明/执行/判定三面分离（IR-0006 治理背书）"
+    file: ADR-0103-governance-charter-absorption-three-plane-separation.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0103-governance-charter-absorption-three-plane-separation.md
+    content_sha256: b75ab74edd5e5bd61475880a5adb75ec0a7b496ca9d023eca8d40df61c34097b
