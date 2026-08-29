@@ -47,3 +47,7 @@ jobs:
         run: python scripts/verify_migration.py --index-file adr/INDEX.yaml
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      # 决策语料账本（IR-0006 W1-D1 / ADR-0103 决策 6）：链式 hash 机械校验——
+      # 链断/篡改/字段缺失=红（INV-01 判定锚点机械 + INV-03 append-only）
+      - name: verify decisions（决策语料链完整性）
+        run: python scripts/verify_decisions.py --ledger decisions/ledger.jsonl
