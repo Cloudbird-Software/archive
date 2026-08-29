@@ -1,0 +1,8 @@
+schema: conformance-seed/v1
+generated_at: "2026-08-29T17:17:05Z"
+run_id: 33265203305
+corpus_entries: 32
+corpus_sha256: 022f8c4104b7dc7efd3b677283946922f3c82a84e07ba188ca38fa3bf36b0100
+gate_review_sha256: 60f0aa398335828149ff8776913c686928647fca31b54c213449b8e624c380d5
+promotions_records: 2
+promotions_head_hash: 4eb3b0aa6b22d48084e043398680311ebd1e0f96d31af37459c53cc49b4ac701
