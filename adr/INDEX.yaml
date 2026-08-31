@@ -726,3 +726,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0103-governance-charter-absorption-three-plane-separation.md
     content_sha256: ed7b190364ba46d5d50e01f1c260061db577d1d8c16e0e7e238fc212a2824c76
+  - number: 104
+    title: "LLM 供应商切换——StepFun Step Plan（step-3.7-flash）与计量层 provider 适配"
+    file: ADR-0104-llm-provider-switch-stepfun-step-3-7-flash.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0104-llm-provider-switch-stepfun-step-3-7-flash.md
+    content_sha256: 1bbd7f2d10c9b837584590bdeadff41d25ccd3dc40056054ab0a7e3e294f841b
