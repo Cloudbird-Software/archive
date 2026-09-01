@@ -733,3 +733,11 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0104-llm-provider-switch-stepfun-step-3-7-flash.md
     content_sha256: 1bbd7f2d10c9b837584590bdeadff41d25ccd3dc40056054ab0a7e3e294f841b
+
+  - number: 105
+    title: "Shorts_Director 契约退役——shot_slot_query 下线与 applies_when 谓词内联（IR-0007）"
+    file: ADR-0105-shorts-contract-retire-shot-slot-query.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0105-shorts-contract-retire-shot-slot-query.md
+    content_sha256: ca125bf788f9b266aa2ff7b6ad623e5143fc7d42ed4bdf6acc94b3ba294079df
