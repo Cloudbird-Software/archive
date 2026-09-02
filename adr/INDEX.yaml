@@ -741,3 +741,11 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0105-shorts-contract-retire-shot-slot-query.md
     content_sha256: ca125bf788f9b266aa2ff7b6ad623e5143fc7d42ed4bdf6acc94b3ba294079df
+
+  - number: 106
+    title: "butler deadman_stale_hours 阈值勘误（3→24）与破玻璃直推 (a) 类回填追认"
+    file: ADR-0106-butler-deadman-stale-hours-breakglass-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0106-butler-deadman-stale-hours-breakglass-backfill.md
+    content_sha256: 29ef8a78d6762551f51db1f6e44a4dbb0e0fef3d4cb5c66a3675e51028c13ca4
