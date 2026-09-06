@@ -1,0 +1,60 @@
+# FRONTIER-SNAPSHOT-v1 —— 能力前沿快照 v1（IR-0009 卡 C2）
+id: FRONTIER-SNAPSHOT-v1
+date: "2026-09-06"
+triggered_by: "IR-0009-C2 初版基线"
+sources:
+  - "archive/evalsets/verifier-exam/v1/（RewardBench2 生成式 + LLMBar 对抗 + null canaries）"
+  - "ADR-0088 / ADR-0104 非劣性判定（δ/cost 1.25x/latency 1.30x/污染 四族）"
+  - "runs/2026-W35.md（端点异常与漂移实测三连）"
+  - "DGA-03 选型证据 T-06 条款画像 v2（IR-0010 卡 B8a）"
+endpoints:
+  - endpoint: "llm-verifier（kimi k2.7）"
+    trust_level: E1
+    role: "判定链唯一 LLM 通道（红队/verifier 判定）"
+    can_do:
+      - "长上下文判定任务（1M token 窗口级）"
+      - "verifier 连续分判读（verifier-exam 通过入职考试，ADR-0072）"
+    cannot_do:
+      - "（本版本未采集到不可行记录——诚实留白，不造数）"
+    failure_modes:
+      - category: "协议/格式错误"
+        description: "kimi-for-coding 渠道对大请求返回 2xx 异常体（W35 run-2026w35-ir004-rev6 实测）"
+        confidence_behavior: "无置信输出"
+        detectability: "自动可检（metering wrapper + verdict 判定行）"
+        evidence: ["runs/2026-W35.md"]
+  - endpoint: "deepseek-v4-flash（经 sensenova）"
+    trust_level: E1
+    role: "E1 备选（B8b 登记，条款定性后启用）"
+    can_do:
+      - "adversary 判定（W35-W6 adversary run 33281672121 verdict=survived 实测）"
+    cannot_do:
+      - "长响应可靠性：连续 4 次 JSON 截断（~21-25K chars，Unterminated string 同位）"
+    failure_modes:
+      - category: "协议/格式错误"
+        description: "provider 截断——judge 判 no-attempts=infra 而非假绿（恒绿防御经受住真实故障）"
+        confidence_behavior: "无置信输出"
+        detectability: "自动可检（JSON 完整性校验）"
+        evidence: ["runs/2026-W35.md W6-M3"]
+  - endpoint: "GLM-5.3（PM 会话）"
+    trust_level: E2
+    role: "PM 规划/生成主力（ADR-0085）"
+    can_do:
+      - "多波次并行编排（IR-0006 W1-W6 单日收口，24 卡/24h）"
+      - "冷上下文六问复测通过（入口面回归）"
+    cannot_do: []
+    failure_modes: []
+  - endpoint: "CNB CodeBuddy（沙箱）"
+    trust_level: E3
+    role: "免费执行沙箱（判定永不外置）"
+    can_do:
+      - "NPC 派单执行+锚串回收（13s 真实执行实测）"
+    cannot_do:
+      - "承载判定（INV-02 红线）"
+    failure_modes:
+      - category: "协议/格式错误"
+        description: "配额嵌套结构/窗口池清空/分页假设三项文档-实况漂移（实测三连）"
+        confidence_behavior: "无置信输出"
+        detectability: "自动可检（机械核对：退出码+锚串）"
+        evidence: ["runs/2026-W35.md"]
+deltas_from_previous: null
+notes: "失败分类字段自 verifier-exam 判读协议 v2 起强制采集（见 README）；本快照重放收口=卡 C2 门禁待办（owner 抽查后关闭）"
