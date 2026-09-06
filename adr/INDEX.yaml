@@ -749,3 +749,27 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0106-butler-deadman-stale-hours-breakglass-backfill.md
     content_sha256: 29ef8a78d6762551f51db1f6e44a4dbb0e0fef3d4cb5c66a3675e51028c13ca4
+
+  - number: 107
+    title: "体系层级声明——理论层与实施层的关系（吸收并利用，IR-0009）"
+    file: ADR-0107-governance-layer-declaration.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0107-governance-layer-declaration.md
+    content_sha256: 72b71231496044543d6262e73a26dae866aa770b5aed2ff1943a2d5181a295fa
+
+  - number: 108
+    title: "CNB 私有阵地声明（三阵地结构·考卷公开答案密封，IR-0010，proposed 待 S-7）"
+    file: ADR-0108-cnb-private-stronghold.md
+    lifecycle: active
+    decision_status: proposed
+    archive_path: adr/ADR-0108-cnb-private-stronghold.md
+    content_sha256: 3fdf1968d856bbd93d9869a88f6cd2d9445fafe7a66e7a4121e4c4f1ef125c20
+
+  - number: 109
+    title: "owner 委托执行期变更回填（交接包执行批次一，IR-0009/0010）"
+    file: ADR-0109-owner-delegation-execution-backfill.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0109-owner-delegation-execution-backfill.md
+    content_sha256: abde2b74c7bb3fbdf545e71dd345c71d7876e020104d8437631c422e771a2668
