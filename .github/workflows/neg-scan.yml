@@ -1,0 +1,19 @@
+name: neg-scan
+on:
+  schedule:
+    - cron: "23 3 * * 1"   # weekly 周一 03:23Z
+  workflow_dispatch:
+    inputs:
+      events:
+        description: "模拟事件（逗号分隔: model_switch,provider_change,workload_change,environment_change）"
+        default: "model_switch"
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: 复活钩子扫描（缺席即记录）
+        run: |
+          python neg-results/neg-scan.py --events "${{ github.event.inputs.events || 'model_switch' }}"

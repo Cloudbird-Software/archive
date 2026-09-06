@@ -1,0 +1,25 @@
+id: NEG-0001
+title: 控制面数据层不采购 DB
+conclusion: git + JSONL hash 链账本形态下，控制面（登记/台账/租约/对账）无需引入数据库即满足全部需求；采购 DB 在当前规模为负价值
+reason: append-only 由 hash 链+规则集+drift 对账执法（W35 曾实测拦截 append 丢失并修复）；时间戳由 GitHub 事件时戳+账本
+  ts 承载；权限谓词由 capabilities.yaml+rulesets+expected-state 表达；查询规模下 evidence-query.sh
+  归并即够
+capability_version: 2026-09 现役组合：kimi k2.7（判定）/ GLM-5.3（PM）/ CNB CodeBuddy（执行沙箱）/
+  GitHub Actions
+environment_conditions: 单写者低频 append；规模 ≤ 千级卡/月；查询=evidence-query 归并；无跨仓月频联查；无多租户索引需求
+expiry_condition:
+  trigger_events:
+  - workload_change
+  predicates:
+  - 跨仓复杂联查成为月频需求
+  - 事件量使 JSONL 归并超过分钟级
+  - 多租户 tenant 聚合需要索引
+revival_candidate: PostgreSQL（审计形态）——届时重启选型（TOOLING T-09 登记为默认候选）
+evidence:
+- 选型证据 T-09 / 登记簿 R-07（dga-theory 交付）
+- ADR-0062（hash 链账本）
+- ADR-0103 决策 6（防双 SSOT）
+status: active
+registered_at: '2026-09-06'
+registered_by: IR-0009-C1
+superseded_by: null
