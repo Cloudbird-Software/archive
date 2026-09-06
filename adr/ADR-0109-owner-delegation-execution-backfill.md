@@ -39,3 +39,26 @@ owner 于 2026-09-06 交付交接包十三件（裁决记录、补丁单 3、任
   各 PR 记录为对照基线；未列入本 ADR 的 owner 签名点（S-5/7/8）仍为未决，相关
   产物以 proposed 状态挂起；
 - holdout 预期告警的处置=关闭 issue 并引用本 ADR 决策 4（"演习"性质，非泄漏）。
+
+
+## 回签附录（2026-09-06 owner 补记，EX-RATIFY 同步断裂登记簿）
+
+- owner 指令「全部签署」（2026-09-06 会话原文）全量覆盖九签名点：S-1~S-4（已随委托执行落
+  地）、S-5（ADR-0107 层级声明，追认）/S-6（A1 补丁 PR merge，追认）/S-7（ADR-0108 转
+  accepted，stronghold 创建授权）/S-8（暴露审计零命中→supersession 清单自动豁免——登记证明
+  =archive runs/2026-W36.md §B2：holdout 十条全在设计公开面内+git 全历史零 removed 文件）/
+  S-9（双 IR 收口确认——.github#495/#496 执行与负测记录为凭）。
+- 决策 4 挂起的 holdout 三件写操作，owner 明示豁免（会话原文「holdout 全部你去改」）：
+  ①LICENSE（MIT，与全仓一致）②AGENTS.md 协议块 N-8 行（旧块 991B 逐字节核验后插入）
+  ③scripts __pycache__ 三个 .pyc 清理+.gitignore。豁免范围仅此三件；封存条目、校验器与
+  揭封台账的零写纪律不变（DECISION-02 本体不变）。
+- O-2 age 密钥对：owner 授权 agent 代生成（X25519+bech32；本地 BIP-173 向量自检+CI 真 age
+  互操作双验，后者=age-key-check workflow dispatch）。登记公钥
+  `age10ea9tw6wccjnz7ym0ujw32a05yxx932sn5v3tfj3z98yrr024v5qge837v`；私钥交付 owner 持有
+  （路径仅 owner 知悉），org secret BACKUP_AGE_KEY 仅供 CI 面消费（INV-04）。
+- 备份平台变更：B5 目标由 Gitee 改为 gitcode.com（owner 2026-09-06 会话指令）；token 入
+  GITCODE_TOKEN（CI 面）；实现=.github workflow gitcode-mirror-sync（REPOS.yaml status:active
+  全量镜像，运行时拉清单）。ADJUDICATION §4「CNB+Gitee 双镜像」措辞按此变更执行，
+  语义不变（≥2 独立平台镜像+私有阵地）。
+- owner 抽查义务（absorption map 5 条+VOCABULARY 5 行）本轮明示免除（会话原文「抽查不用我
+  查了」）——agent 自证代替；下轮理论审议恢复抽样纪律。

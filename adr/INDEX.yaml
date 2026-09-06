@@ -759,7 +759,7 @@ entries:
     content_sha256: 72b71231496044543d6262e73a26dae866aa770b5aed2ff1943a2d5181a295fa
 
   - number: 108
-    title: "CNB 私有阵地声明（三阵地结构·考卷公开答案密封，IR-0010，proposed 待 S-7）"
+    title: "CNB 私有阵地声明（三阵地结构·考卷公开答案密封，IR-0010，accepted 2026-09-06（S-7 签署））"
     file: ADR-0108-cnb-private-stronghold.md
     lifecycle: active
     decision_status: proposed

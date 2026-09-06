@@ -1,6 +1,7 @@
 # ADR-0108: CNB 私有阵地声明（DGA 三阵地结构——考卷公开、答案密封）
 
-- status: proposed（owner 签署待落=S-7；B1 阵地核验完成前不执行任何迁移）
+- status: accepted（2026-09-06 owner S-7 签署=对话指令「全部签署」；B1 核验绿 run 34021419417；
+  S-8 暴露审计零命中→supersession 清单自动豁免已登记——迁移门禁三件齐备）
 - deciders: 人（owner randypanding——DGA-ADJUDICATION v1.0 §2，2026-09-06）+ AI（现场编码 agent 依 IR-0010 卡 B1 起草）
 - 关联: ADR-0020（效力范围确认为 GitHub org，不变更）；DECISION-02（挂载禁令延伸）；
   INV-04（凭据分域延伸）；IR-0010 卡 B1/B2（执行载体）；DGA v1.1 §4.3 其二·附
