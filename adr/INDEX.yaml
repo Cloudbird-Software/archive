@@ -796,3 +796,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0112-checkpoint-ext.md
     content_sha256: 725d7cb86da5b25f54eef25cfbcdf08a09a9c2ca646768298329c63170c65a2e
+  - number: 113
+    title: "M5 执行环境注册表 schema 扩展定案"
+    file: ADR-0113-env-registry.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0113-env-registry.md
+    content_sha256: 0be7dd8bdea289840328071965ef170da8df9090de67588dbdfb9d70d37a2a8b
