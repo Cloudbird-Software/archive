@@ -773,3 +773,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0109-owner-delegation-execution-backfill.md
     content_sha256: abde2b74c7bb3fbdf545e71dd345c71d7876e020104d8437631c422e771a2668
+  - number: 110
+    title: "M5 Harness 架构 spec 定案"
+    file: ADR-0110-harness-spec.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0110-harness-spec.md
+    content_sha256: 55c648bee2ba75d72b0b88c2a9add5bfbea2d37dbba822ba673b95ece031f125
