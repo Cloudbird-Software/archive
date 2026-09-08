@@ -8,7 +8,6 @@ migrated_at: 2026-08-21T14:22:27Z
 homed_at: 2026-08-25T00:00:00Z
 source_closed: true   # ADR-0085 家园单仓化：迁移 cohort 源保真已由周期校验背书，(c) 收口
 comment: ADR 家园单仓化（ADR-0085）——索引随正本落 archive/adr；agent-registry/decisions 原索引停止维护
-entries:
   - number: 1
     title: "建立 agent-registry，四类声明统一落盘"
     file: ADR-0001-agent-registry-establishment.md
@@ -782,6 +781,13 @@ entries:
     archive_path: adr/ADR-0110-harness-spec.md
     content_sha256: 55c648bee2ba75d72b0b88c2a9add5bfbea2d37dbba822ba673b95ece031f125
 
+  - number: 111
+    title: "M5 MCP 适配器协议 spec 定案"
+    file: ADR-0111-mcp-adapter.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0111-mcp-adapter.md
+    content_sha256: aa404a2c34b9e1854fcc5328b3a04f499473fe1d14b774c4d254fd4937a1c150
   - number: 0
     title: "DGA 裁决记录 v1.0（S5 断裂裁决正本，非 ADR 编号）"
     file: DGA-ADJUDICATION-v1.0.md
