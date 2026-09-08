@@ -803,3 +803,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0113-env-registry.md
     content_sha256: 0be7dd8bdea289840328071965ef170da8df9090de67588dbdfb9d70d37a2a8b
+  - number: 114
+    title: "M6 证据契约 schema 扩展定案"
+    file: ADR-0114-evidence-contract.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0114-evidence-contract.md
+    content_sha256: a4c25d80a2ca8cf43f8e03b4668da688bc29b1a4f294ab82013d3cb4e8bc8174
