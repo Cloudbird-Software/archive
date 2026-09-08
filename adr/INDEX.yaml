@@ -789,3 +789,10 @@ entries:
     decision_status: accepted
     archive_path: adr/DGA-ADJUDICATION-v1.0.md
     content_sha256: 850e3a79753767eb1dc393d80c824d2fb13d7094193bb666db7b78064ba79bdd
+  - number: 112
+    title: "M5 检查点外置接口 spec 定案"
+    file: ADR-0112-checkpoint-ext.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0112-checkpoint-ext.md
+    content_sha256: 725d7cb86da5b25f54eef25cfbcdf08a09a9c2ca646768298329c63170c65a2e
