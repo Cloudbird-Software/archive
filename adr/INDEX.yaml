@@ -831,3 +831,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0117-circuit-breaker.md
     content_sha256: f28cb32d6a9f815ee59cce7e40e921c599d6bd60bb9ca5f446196fd464242c18
+  - number: 118
+    title: "openjiuwen 编排落地方案定案"
+    file: ADR-0118-openjiuwen-orchestration.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0118-openjiuwen-orchestration.md
+    content_sha256: 451fc534a404ef8a3161ee451bf690d2e5f8ddbf4c1041a42d24c3e91123c528
