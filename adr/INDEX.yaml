@@ -773,3 +773,11 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0109-owner-delegation-execution-backfill.md
     content_sha256: abde2b74c7bb3fbdf545e71dd345c71d7876e020104d8437631c422e771a2668
+
+  - number: 110
+    title: "设立 ROLE-CEO 槽位并授予 L4 战略自治（IR-0011）"
+    file: ADR-0110-role-ceo-l4-slot.md
+    lifecycle: active
+    decision_status: proposed
+    archive_path: adr/ADR-0110-role-ceo-l4-slot.md
+    content_sha256: 0b064596106edd894dc9543ce287b66086c783fb62cc938359885d92a1784cf7
