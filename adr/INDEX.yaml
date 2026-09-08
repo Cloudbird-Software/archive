@@ -824,3 +824,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0116-drift-reassessment.md
     content_sha256: 8372e3cc9219b3dddd900093d0600e1ffb503413d7da3319294d3114f571ba38
+  - number: 117
+    title: "M7 成本熔断策略 spec 定案"
+    file: ADR-0117-circuit-breaker.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0117-circuit-breaker.md
+    content_sha256: f28cb32d6a9f815ee59cce7e40e921c599d6bd60bb9ca5f446196fd464242c18
