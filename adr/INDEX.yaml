@@ -789,3 +789,10 @@ entries:
     decision_status: accepted
     archive_path: adr/DGA-ADJUDICATION-v1.0.md
     content_sha256: 850e3a79753767eb1dc393d80c824d2fb13d7094193bb666db7b78064ba79bdd
+  - number: 111
+    title: "M5 MCP 适配器协议 spec 定案"
+    file: ADR-0111-mcp-adapter.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0111-mcp-adapter.md
+    content_sha256: 76bd07de499e991813a6c2a649692c59a3ae568ac900818550b9b78b14c3347b
