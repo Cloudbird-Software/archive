@@ -810,3 +810,10 @@ entries:
     decision_status: accepted
     archive_path: adr/ADR-0114-evidence-contract.md
     content_sha256: a4c25d80a2ca8cf43f8e03b4668da688bc29b1a4f294ab82013d3cb4e8bc8174
+  - number: 115
+    title: "M6 Decision Log 管道 spec 定案"
+    file: ADR-0115-decision-log.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0115-decision-log.md
+    content_sha256: 58290b89b8c8d423be2c1b8eed61b8a5e4346eb8437f376896e295b454b9d9c9
