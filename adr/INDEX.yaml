@@ -775,12 +775,12 @@ entries:
     content_sha256: 682ff7d65138f173c8e50864fd579713d159e536c608cd75ece5cc521566125a
 
   - number: 110
-    title: "设立 ROLE-CEO 槽位并授予 L4 战略自治（IR-0011）"
-    file: ADR-0110-role-ceo-l4-slot.md
+    title: "M5 Harness 架构 spec 定案"
+    file: ADR-0110-harness-spec.md
     lifecycle: active
-    decision_status: proposed
-    archive_path: adr/ADR-0110-role-ceo-l4-slot.md
-    content_sha256: 0b064596106edd894dc9543ce287b66086c783fb62cc938359885d92a1784cf7
+    decision_status: accepted
+    archive_path: adr/ADR-0110-harness-spec.md
+    content_sha256: 55c648bee2ba75d72b0b88c2a9add5bfbea2d37dbba822ba673b95ece031f125
 
   - number: 0
     title: "DGA 裁决记录 v1.0（S5 断裂裁决正本，非 ADR 编号）"
