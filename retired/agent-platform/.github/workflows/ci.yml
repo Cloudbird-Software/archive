@@ -1,0 +1,179 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/hygiene.yml@9c20d43d60e9f9d1438f171aeee8e4dbdf02c08b # v1
+
+  deps-audit:
+    # push 面依赖审计（ADR-0021，红队 #11-C）：dependency-review 只支持 PR 事件（比对
+    # base↔head），直推 main 时 deps job 被 skip 而 gate 判绿——push 面零校验。
+    # 直推本应只有破玻璃（§8 后验），但"跳过=通过"的 gate 语义是声明性漏洞：
+    # push 用 lockfile 审计兜底（npm audit 只读 registry 元数据，无新 action 依赖）。
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: 核心锁面审计（uv.lock，零容忍）
+        run: |
+          # Python 仓（ADR-0025 语言准入）：uv lock 与 pyproject 同步校验 + 全量依赖漏洞审计
+          pipx install uv
+          uv lock --check
+          uv export --all-extras --format requirements-txt --output-file /tmp/req.txt --no-hashes
+          pipx install pip-audit
+          pip-audit --requirement /tmp/req.txt --skip-editable
+      - name: 运行时锁面审计（runtime/requirements.lock，显式风险准入）
+        run: |
+          # 运行时树（openjiuwen/jiuwenswarm 传递依赖）与核心锁面分离（ADR-0025）：
+          # 上游钉死/未发修复版的漏洞在此面登记为准入项——准入清单即审计对象，
+          # 新出现的未登记漏洞仍然 fail-closed。每项准入须给出不可修理由：
+          #   PYSEC-2026-311   chromadb 1.5.9  预认证代码注入——修复版未发布
+          #                    （last_affected=1.5.9）；部署面仅进程内/loopback 使用，
+          #                    Docker 网络面隔离；上游 jiuwenswarm==0.2.3 引入。
+          #   PYSEC-2026-2447  diskcache 5.6.3 pickle 反序列化——本地向量 + 需 UI
+          #                    交互（AV:L/UI:A），修复版未发布；py-key-value-aio 引入。
+          #   PYSEC-2026-2475  fastmcp 命令注入（Gemini CLI 集成路径）——修复在 3.2.0，
+          #                    openjiuwen==0.1.16 钉 fastmcp<3.0；本运行时不使用该路径。
+          #   PYSEC-2026-2476  fastmcp OAuth proxy 缺失 consent 校验——同上钉死；
+          #                    本运行时不启用 OAuth proxy。
+          #   PYSEC-2026-1835  pypdf2 DoS（注释后无字符死循环）——pypdf2 已停更，
+          #                    修复在继任者 pypdf 3.9.0；skillnet-ai 硬依赖 pypdf2，
+          #                    仅文档解析面、影响可用性不影响机密性。
+          pipx install pip-audit
+          pip-audit --requirement runtime/requirements.lock --skip-editable \
+            --ignore-vuln PYSEC-2026-311 \
+            --ignore-vuln PYSEC-2026-2447 \
+            --ignore-vuln PYSEC-2026-2475 \
+            --ignore-vuln PYSEC-2026-2476 \
+            --ignore-vuln PYSEC-2026-1835
+
+  check:
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/check.yml@9c20d43d60e9f9d1438f171aeee8e4dbdf02c08b # v1
+    with:
+      runtime: python
+      python-version: "3.12"
+
+  vendor:
+    # vendor 声明快照对账（ADR-0025）：快照实测 digest 必须与 PROVENANCE 一致——
+    # 绕过 agent-registry PR 流程手改 vendor 在此 fail-closed。
+    # drill：开箱即用终验演练（init→env→doctor→dry-run→ctl→对抗注入→恢复）。
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: |
+          pipx install uv
+          uv run python scripts/vendor_registry.py
+          uv run python scripts/drill.py
+
+  deps:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/dep-review.yml@9c20d43d60e9f9d1438f171aeee8e4dbdf02c08b # v1
+
+  adr-required:
+    # C1 脚手架面（ADR-0021，GOVERNANCE C1 scope）：供应链入口文件变更须引用 ADR。
+    # 存在性校验读公开仓 agent-registry/decisions（GITHUB_TOKEN 可读公开仓，fail-closed）。
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: C1 脚手架变更须引用 ADR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          PR_API="repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}"
+          CHANGED=$(gh api "$PR_API" --jq '.changed_files')
+          GOT=0; C1_HIT=0; PAGE=1
+          while :; do
+            PAGEJSON=$(gh api "$PR_API/files?per_page=100&page=$PAGE")
+            jq -e 'type == "array"' <<<"$PAGEJSON" >/dev/null 2>&1 || {
+              echo "::error::files API 拉取失败——C1 判定无法保证，fail-closed"; exit 1; }
+            N=$(jq 'length' <<<"$PAGEJSON")
+            GOT=$((GOT+N))
+            if jq -e '[.[] | .filename, (.previous_filename // empty)]
+                     | any(test("^(\\.github/|AGENTS\\.md|Makefile|docs/|zizmor\\.yml|\\.dependency-cruiser\\.cjs)"))' <<<"$PAGEJSON" >/dev/null 2>&1; then
+              C1_HIT=1
+            fi
+            [[ $N -lt 100 ]] && break
+            PAGE=$((PAGE+1))
+          done
+          if [ "$GOT" -lt "$CHANGED" ]; then
+            echo "::error::files API 截断（$GOT/$CHANGED）——fail-closed"; exit 1
+          fi
+          if [ "$C1_HIT" -ne 1 ]; then
+            echo "非 C1 脚手架路径变更，跳过 adr-required"; exit 0
+          fi
+          ADR_RE='\bADR-[0-9]{4}\b'
+          if ! { echo "$PR_TITLE"; echo "$PR_BODY"; } | grep -qE "$ADR_RE"; then
+            echo "::error::C1 脚手架面（.github/AGENTS.md/Makefile/docs/zizmor.yml）变更但 PR 未引用 ADR-NNNN（GOVERNANCE C1——供应链入口，ADR-0021）"
+            exit 1
+          fi
+          ADR_LISTING=$(gh api "repos/Cloudbird-Software/agent-registry/contents/decisions?per_page=100" --paginate --jq '.[].name' 2>/dev/null)
+          if [[ -z "$ADR_LISTING" ]]; then
+            echo "::error::agent-registry/decisions 清单拉取失败（fail-closed）"; exit 1
+          fi
+          MISSING=0
+          for ref in $( { echo "$PR_TITLE"; echo "$PR_BODY"; } | grep -oE "$ADR_RE" | sort -u ); do
+            num="${ref#ADR-}"
+            grep -q "^ADR-${num}-" <<<"$ADR_LISTING" || {
+              echo "::error::引用的 ${ref} 在 agent-registry/decisions/ 无对应文件（幽灵 ADR）"; MISSING=1; }
+          done
+          exit $MISSING
+
+  gate:
+    if: always()
+    needs: [hygiene, check, deps, deps-audit, adr-required, vendor]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All required jobs green?
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "$NEEDS (event=$EVENT)"
+          # 严格断言（P1-3 .github#84 / ADR-0032，standards/automation/required-check-chains.md）：
+          # skipped≠success——仅下列 EXPECTED_SKIP 登记的事件互补 job 允许 skipped，
+          # 未登记的 skipped 与一切非 success（failure/cancelled/timed_out/startup_failure）一律红
+          case "$EVENT" in
+            pull_request) EXPECTED_SKIP="deps-audit" ;;
+            push)         EXPECTED_SKIP="deps adr-required" ;;
+            *)            EXPECTED_SKIP="" ;;
+          esac
+          BAD=$(echo "$NEEDS" | jq -r --arg skip "$EXPECTED_SKIP" '
+            to_entries[]
+            | . as $e
+            | select(.value.result != "success")
+            | select((($skip | split(" ")) | index($e.key)) == null)
+            | "\($e.key)=\($e.value.result)"')
+          if [[ -n "$BAD" ]]; then
+            echo "::error::以下 job 非 success 且不属于事件 $EVENT 的结构性预期跳过：$BAD（skipped≠success——ADR-0032）"; exit 1
+          fi

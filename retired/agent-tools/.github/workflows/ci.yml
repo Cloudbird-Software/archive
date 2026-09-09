@@ -1,0 +1,70 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/hygiene.yml@4938955db008ddab2df170ec824c2cc3acbc1551 # v1
+
+  check:
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/check.yml@4938955db008ddab2df170ec824c2cc3acbc1551 # v1
+    with:
+      ciw-ref: 4938955db008ddab2df170ec824c2cc3acbc1551
+      runtime: node
+      node-version: "24"
+
+  deps:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/dep-review.yml@4938955db008ddab2df170ec824c2cc3acbc1551 # v1
+    with:
+      ciw-ref: 4938955db008ddab2df170ec824c2cc3acbc1551
+
+  suppression-budget:
+    # P2-2 抑制标记预算门（ADR-0036 / .github #87）：净增 ≤3/PR + 合入树总量棘轮
+    # + ADR 逃生门。独立 reusable（v1.5.1 内嵌 check.yml 实测触发平台 action 解析
+    # 故障，v1.5.3 起独立文件——ADR-0036 修订）。非 PR 事件 n/a-success（无需
+    # EXPECTED_SKIP 登记）。
+    uses: Cloudbird-Software/CI-Workflows/.github/workflows/suppression-gate.yml@4938955db008ddab2df170ec824c2cc3acbc1551
+    with:
+      detector-ref: 4938955db008ddab2df170ec824c2cc3acbc1551
+
+  gate:
+    if: always()
+    needs: [hygiene, check, deps, suppression-budget]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All required jobs green?
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "$NEEDS (event=$EVENT)"
+          # 严格断言（P1-3 .github#84 / ADR-0032，standards/automation/required-check-chains.md）：
+          # skipped≠success——仅下列 EXPECTED_SKIP 登记的事件互补 job 允许 skipped，
+          # 未登记的 skipped 与一切非 success（failure/cancelled/timed_out/startup_failure）一律红
+          case "$EVENT" in
+            pull_request) EXPECTED_SKIP="" ;;
+            push)         EXPECTED_SKIP="deps" ;;
+            *)            EXPECTED_SKIP="" ;;
+          esac
+          BAD=$(echo "$NEEDS" | jq -r --arg skip "$EXPECTED_SKIP" '
+            to_entries[]
+            | . as $e
+            | select(.value.result != "success")
+            | select((($skip | split(" ")) | index($e.key)) == null)
+            | "\($e.key)=\($e.value.result)"')
+          if [[ -n "$BAD" ]]; then
+            echo "::error::以下 job 非 success 且不属于事件 $EVENT 的结构性预期跳过：$BAD（skipped≠success——ADR-0032）"; exit 1
+          fi
