@@ -844,3 +844,10 @@ comment: ADR 家园单仓化（ADR-0085）——索引随正本落 archive/adr�
     decision_status: accepted
     archive_path: adr/ADR-0118-openjiuwen-orchestration.md
     content_sha256: 451fc534a404ef8a3161ee451bf690d2e5f8ddbf4c1041a42d24c3e91123c528
+  - number: 119
+    title: "撤销 GOVERNANCE EX-1 并退役 cnb-bridge 免费算力桥接"
+    file: ADR-0119-terminate-cnb-free-compute-bridge.md
+    lifecycle: active
+    decision_status: accepted
+    archive_path: adr/ADR-0119-terminate-cnb-free-compute-bridge.md
+    content_sha256: fb73382a658d6803f0582df908b99daa56fb4db49283c9c804bd065098e30123
